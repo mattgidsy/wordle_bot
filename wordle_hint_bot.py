@@ -1,4 +1,15 @@
 
+class user():
+    def __init__(self, name, guess, guess_cl, filtered_list ) -> None:
+        filtered_list = []
+        self.name = name
+        self.guess = guess
+        self.guess_cl = guess_cl
+        self.filtered_list = filtered_list
+        
+        
+        
+
 #filter words with letters that were correct but out of position, filter words with the correct letter's incorrrect position
 def filter_incorrect_positions(guess: str, guess_cl: str, filtered_list: list) -> list:
 
