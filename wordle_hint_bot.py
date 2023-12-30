@@ -1,13 +1,12 @@
-
-class user():
-    def __init__(self, name, guess, guess_cl, filtered_list ) -> None:
-        filtered_list = []
+#consider making the wordle user class and make the wordle search functions a class method
+class User:
+    def __init__(self, name, guess=None, guess_cl=None, filtered_list=None):
+        if filtered_list is None:
+            filtered_list = []
         self.name = name
         self.guess = guess
         self.guess_cl = guess_cl
         self.filtered_list = filtered_list
-        
-        
         
 
 #filter words with letters that were correct but out of position, filter words with the correct letter's incorrrect position
@@ -145,20 +144,16 @@ def filter_guess(guess: str, guess_cl: str, filtered_list: list ) -> list:
     
     return filtered_list
 
+# ask for the user name and guess information
 def ask_guess():
-    #create list to hold the possible words to guess
-    filtered_list = []
-    
+    human_player = User(input("\nWhat's your name?\n"))
     for i in range(5):
-        guess = input("\nInput your 5 letter guess:\n")
-        if guess == "quit":
-            quit()
-        guess_cl = input("\nWhich letters are in the word but out of position?:\n")
-        if guess_cl == 'quit':
-            quit()
-        filtered_list = filter_guess(guess, guess_cl, filtered_list)
-        possible_guess_results(filtered_list)
-        
+        human_player.guess = input("\nInput your 5 letter guess:\n")
+        human_player.guess_cl = input("\nWhich letters are in the word but out of position?:\n")
+        human_player.filtered_list = filter_guess(human_player.guess, human_player.guess_cl, human_player.filtered_list)
+        possible_guess_results(human_player.filtered_list)
+    
+# how to play       
 def get_started():
     print("\n   ###### Welcome to Wordle_Helper_Bot! ###### \n\nInput all incorretly positioned letters in lowercase \n   Input correctly positioned letters in UPPERCASE\n      Type 'quit' to exit")
     print("\n   ###### Welcome to Wordle_Helper_Bot! ######")
