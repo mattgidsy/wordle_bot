@@ -1,116 +1,121 @@
 #consider making the wordle user class and make the wordle search functions a class method
 class User:
-    def __init__(self, name, guess=None, guess_cl=None, filtered_list=None):
+    def __init__(self, name, guess=None, guess_cl=None, filtered_list=None, word_list=None):
         if filtered_list is None:
             filtered_list = []
+        if word_list is None:
+            with open("guess_list.txt") as guess_list:
+                lines = guess_list.readlines()
+            word_list = [word.strip() for word in lines]
         self.name = name
         self.guess = guess
         self.guess_cl = guess_cl
         self.filtered_list = filtered_list
+        self.word_list = word_list
         
 
-#filter words with letters that were correct but out of position, filter words with the correct letter's incorrrect position
-def filter_incorrect_positions(guess: str, guess_cl: str, filtered_list: list) -> list:
-    
-    temp_possible_words = []
-    # Create the list of tuples (index, letter) for each letter in guess_cl and its corresponding index in guess
-    guess_cl_positions = [(index, char) for index, char in enumerate(guess) if char in guess_cl]
-
-    # If there are letters to check in guess_cl and filtered_list is not empty
-    if guess_cl_positions and filtered_list:
-
-        for word in filtered_list:
-            # Initialize a flag to indicate a match
-            match = False
-            for index, char in guess_cl_positions:  # Adjusted order here
-                # Check if any of the letters in guess_cl_positions matches the same position in the word
-                if word[index] == char:
-                    match = True
-                    break  # Break the loop if a match is found
-
-            # Add the word to temp_possible_words if there is no match
-            if not match:
-                temp_possible_words.append((word))
-
-        # Update filtered_list with the filtered list
-        filtered_list = temp_possible_words
-    else:
-        pass
-    
-    return filtered_list
-
-# filter the words that have letters that should be totally excluded from the word (letters neither correct nor in posistion)
-def filter_excluded_letter(guess: str, guess_cl: str, filtered_list: list) -> list:
-    
-    temp_possible_words = []    
-    # create the list of excluded letters
-    excluded_letters = [letter for letter in guess if letter.islower() and letter not in guess_cl]
-    # create a list of tuples containing the correct letters and their indexed positions   
-    correct_positions = [(index, char.lower()) for index, char in enumerate(guess) if char.isupper() and char not in guess_cl]
-          
-    #filter through possible words ignoring letters in the correct positions. allows for repeat letters
-    for word in filtered_list:
-        contains_excluded = False
-        for index,char in enumerate(word):
-             if (index,char) not in correct_positions and char in excluded_letters:
-                 contains_excluded = True
-                 break # Break the inner loop if an excluded letter is found
-             
-        # Add the tuple to temp_possible_words if it does not contain any excluded letter
-        if not contains_excluded:
-            temp_possible_words.append(word)
-    filtered_list = temp_possible_words
-    
-    return filtered_list
-
-# filter words that don't include the correct letter in the correct position
-def filter_correct_position(guess: str, word_list: str, filtered_list: list) -> list: 
-    
-    temp_possible_words = []
-    #index the guessed word's letters for parsing
-    guessed_positions = [(index, char.lower()) for index, char in enumerate(guess) if char.isupper()]
-    
-    #check if there are any uppercase letters and if filtered_list is empty
-    if any(letter.isupper() for letter in guess) and len(filtered_list) == 0:
-        #search word_list
-        for word in word_list:
-            # Check if all guessed letters are in the correct positions
-            if all((i,c) in guessed_positions and c == word[i] for i,c in guessed_positions):
-                filtered_list.append(word)
-    elif any(letter.isupper() for letter in guess) and len(filtered_list) > 0:
-        #if word not in filtered_list append to a temp list and replace filtered list to deduce
-        for word in filtered_list:
-            if all((i,c) in guessed_positions and c == word[i] for i,c in guessed_positions):
-                temp_possible_words.append(word)
-        filtered_list = temp_possible_words
-    else: 
-        pass
-    
-    return filtered_list
-
-#filter words that include the correct letters        
-def filter_correct_letter(guess_cl: str,word_list: str, filtered_list: list) -> list:
-    
-    temp_possible_words = []    
-    correct_letters = list(guess_cl)
-
-    if len(filtered_list) == 0:
-        for word in word_list:
-            # Check if at least one of the specified letters is present in the word
-            if all(char in word for char in correct_letters):
-                if word not in filtered_list:
-                # If true, append the word to the filtered list if it's not there
-                    filtered_list.append(word)
-                    
-    else:
-        for word in filtered_list:
-            # Check if at least one of the specified letters is present in the word
-            if all(char in word for char in correct_letters):
-                #if word not in filtered_list append to a temp list and replace filtered list to deduce
-                temp_possible_words.append(word)
-        filtered_list = temp_possible_words
+    #filter words with letters that were correct but out of position, filter words with the correct letter's incorrrect position
+    def filter_incorrect_positions(self) -> list:
         
-    return filtered_list
+        temp_possible_words = []
+        # Create the list of tuples (index, letter) for each letter in guess_cl and its corresponding index in guess
+        guess_cl_positions = [(index, char) for index, char in enumerate(self.guess) if char in self.guess_cl]
+
+        # If there are letters to check in guess_cl and filtered_list is not empty
+        if guess_cl_positions and self.filtered_list:
+
+            for word in self.filtered_list:
+                # Initialize a flag to indicate a match
+                match = False
+                for index, char in guess_cl_positions:  # Adjusted order here
+                    # Check if any of the letters in guess_cl_positions matches the same position in the word
+                    if word[index] == char:
+                        match = True
+                        break  # Break the loop if a match is found
+
+                # Add the word to temp_possible_words if there is no match
+                if not match:
+                    temp_possible_words.append((word))
+
+            # Update filtered_list with the filtered list
+            self.filtered_list = temp_possible_words
+        else:
+            pass
+        
+        return self.filtered_list
+
+    # filter the words that have letters that should be totally excluded from the word (letters neither correct nor in posistion)
+    def filter_excluded_letter(self) -> list:
+        
+        temp_possible_words = []    
+        # create the list of excluded letters
+        excluded_letters = [letter for letter in self.guess if letter.islower() and letter not in self.guess_cl]
+        # create a list of tuples containing the correct letters and their indexed positions   
+        correct_positions = [(index, char.lower()) for index, char in enumerate(self.guess) if char.isupper() and char not in self.guess_cl]
+            
+        #filter through possible words ignoring letters in the correct positions. allows for repeat letters
+        for word in self.filtered_list:
+            contains_excluded = False
+            for index,char in enumerate(word):
+                if (index,char) not in correct_positions and char in excluded_letters:
+                    contains_excluded = True
+                    break # Break the inner loop if an excluded letter is found
+                
+            # Add the tuple to temp_possible_words if it does not contain any excluded letter
+            if not contains_excluded:
+                temp_possible_words.append(word)
+        self.filtered_list = temp_possible_words
+        
+        return self.filtered_list
+
+    # filter words that don't include the correct letter in the correct position
+    def filter_correct_position(self) -> list: 
+        
+        temp_possible_words = []
+        #index the guessed word's letters for parsing
+        guessed_positions = [(index, char.lower()) for index, char in enumerate(self.guess) if char.isupper()]
+        
+        #check if there are any uppercase letters and if filtered_list is empty
+        if any(letter.isupper() for letter in self.guess) and len(self.filtered_list) == 0:
+            #search word_list
+            for word in self.word_list:
+                # Check if all guessed letters are in the correct positions
+                if all((i,c) in guessed_positions and c == word[i] for i,c in guessed_positions):
+                    self.filtered_list.append(word)
+        elif any(letter.isupper() for letter in self.guess) and len(self.filtered_list) > 0:
+            #if word not in filtered_list append to a temp list and replace filtered list to deduce
+            for word in self.filtered_list:
+                if all((i,c) in guessed_positions and c == word[i] for i,c in guessed_positions):
+                    temp_possible_words.append(word)
+            self.filtered_list = temp_possible_words
+        else: 
+            pass
+        
+        return self.filtered_list
+
+    #filter words that include the correct letters        
+    def filter_correct_letter(self) -> list:
+        
+        temp_possible_words = []    
+        correct_letters = list(self.guess_cl)
+
+        if len(self.filtered_list) == 0:
+            for word in self.word_list:
+                # Check if at least one of the specified letters is present in the word
+                if all(char in word for char in correct_letters):
+                    if word not in self.filtered_list:
+                    # If true, append the word to the filtered list if it's not there
+                        self.filtered_list.append(word)
+                        
+        else:
+            for word in self.filtered_list:
+                # Check if at least one of the specified letters is present in the word
+                if all(char in word for char in correct_letters):
+                    #if word not in filtered_list append to a temp list and replace filtered list to deduce
+                    temp_possible_words.append(word)
+            self.filtered_list = temp_possible_words
+            
+        return self.filtered_list
 
 #display the results                                        
 def possible_guess_results(filtered_list: list):
@@ -126,32 +131,22 @@ def possible_guess_results(filtered_list: list):
     else:
         print(filtered_list)
         
- #send the guess and correct letters to be parsed and used to filter a possible guess list       
-def filter_guess(guess: str, guess_cl: str, filtered_list: list ) -> list:
+#search for letters and filter a list of possible words to guess   
+def filter_guess(user: User ) -> list:
     
-    #open the file containing a list of 5 letter words
-    with open("guess_list.txt") as guess_list:
-        lines = guess_list.readlines()
-        
-    #iterate through the word list (this one contains 5 letter words for wordle)   
-    word_list = [word.strip() for word in lines]
-    
-    #search for letters and filter a list of possible words to guess
-    filtered_list = filter_correct_position(guess, word_list, filtered_list)
-    filtered_list = filter_correct_letter(guess_cl,word_list, filtered_list)
-    filtered_list = filter_excluded_letter(guess, guess_cl, filtered_list)
-    filtered_list = filter_incorrect_positions(guess, guess_cl, filtered_list)
-    
-    return filtered_list
+    user.filter_correct_position()
+    user.filter_correct_letter()
+    user.filter_excluded_letter()
+    user.filter_incorrect_positions()
 
 # ask for the user name and guess information
 def ask_guess():
-    human_player = User(input("\nWhat's your name?\n"))
+    player = User(input("\nWhat's your name?\n"))
     for i in range(5):
-        human_player.guess = input("\nInput your 5 letter guess:\n")
-        human_player.guess_cl = input("\nWhich letters are in the word but out of position?:\n")
-        human_player.filtered_list = filter_guess(human_player.guess, human_player.guess_cl, human_player.filtered_list)
-        possible_guess_results(human_player.filtered_list)
+        player.guess = input("\nInput your 5 letter guess:\n")
+        player.guess_cl = input("\nWhich letters are in the word but out of position?:\n")
+        filter_guess(player)
+        possible_guess_results(player.filtered_list)
     
 # how to play       
 def get_started():
