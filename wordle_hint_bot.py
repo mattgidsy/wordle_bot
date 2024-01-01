@@ -1,26 +1,29 @@
 #consider making the wordle user class and make the wordle search functions a class method
-class User:
-    def __init__(self, name, guess=None, guess_cl=None, filtered_list=None, word_list=None):
+class WordleUser:
+    def __init__(self, name=None, guess=None, guess_cl=None, filtered_list=None, word_list=None):
         if filtered_list is None:
             filtered_list = []
         if word_list is None:
-            with open("guess_list.txt") as guess_list:
-                lines = guess_list.readlines()
-            word_list = [word.strip() for word in lines]
+            try:
+                with open("wordle_list.txt") as wordle_list:
+                    lines = wordle_list.readlines()
+                word_list = [word.strip() for word in lines]
+            except FileNotFoundError:
+                print("\n'wordle_list.txt' could not be found")
+                print("\nExiting the program...\n")
+                quit()
         self.name = name
         self.guess = guess
         self.guess_cl = guess_cl
         self.filtered_list = filtered_list
         self.word_list = word_list
         
-
     #filter words with letters that were correct but out of position, filter words with the correct letter's incorrrect position
     def filter_incorrect_positions(self) -> list:
         
         temp_possible_words = []
         # Create the list of tuples (index, letter) for each letter in guess_cl and its corresponding index in guess
         guess_cl_positions = [(index, char) for index, char in enumerate(self.guess) if char in self.guess_cl]
-
         # If there are letters to check in guess_cl and filtered_list is not empty
         if guess_cl_positions and self.filtered_list:
 
@@ -120,7 +123,7 @@ class User:
 #display the results                                        
 def possible_guess_results(filtered_list: list):
     if len(filtered_list) == 0:
-        try_again = input("\nHow do I say this? \nI have failed you, there are no possible answers.\nTry again? [Y/N]: ")
+        try_again = input("\nHow do I say this? \n\nI have failed you.. or you have failed me.\n\nI have no possible answers that meet your conditions.\n\n Try again? [Y/N]: ")
         if try_again == "Y" or try_again == 'y':
             get_started()
         else:
@@ -132,20 +135,22 @@ def possible_guess_results(filtered_list: list):
         print(filtered_list)
         
 #search for letters and filter a list of possible words to guess   
-def filter_guess(user: User ) -> list:
+def wordle_filter(player: WordleUser ) -> list:
     
-    user.filter_correct_position()
-    user.filter_correct_letter()
-    user.filter_excluded_letter()
-    user.filter_incorrect_positions()
+    player.filter_correct_position()
+    player.filter_correct_letter()
+    player.filter_excluded_letter()
+    player.filter_incorrect_positions()
 
 # ask for the user name and guess information
 def ask_guess():
-    player = User(input("\nWhat's your name?\n"))
+    player = WordleUser()
     for i in range(5):
         player.guess = input("\nInput your 5 letter guess:\n")
-        player.guess_cl = input("\nWhich letters are in the word but out of position?:\n")
-        filter_guess(player)
+        player.guess_cl = input("\nWhich letters are in the word but out of position?:\n").lower()
+            
+        wordle_filter(player)
+        
         possible_guess_results(player.filtered_list)
     
 # how to play       
