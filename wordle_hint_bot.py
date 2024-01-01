@@ -1,6 +1,6 @@
 #consider making the wordle user class and make the wordle search functions a class method
 class WordleUser:
-    def __init__(self, name=None, guess=None, guess_cl=None, filtered_list=None, word_list=None):
+    def __init__(self, guess=None, guess_cl=None, filtered_list=None, word_list=None):
         if filtered_list is None:
             filtered_list = []
         if word_list is None:
@@ -12,7 +12,6 @@ class WordleUser:
                 print("\n'wordle_list.txt' could not be found")
                 print("\nExiting the program...\n")
                 quit()
-        self.name = name
         self.guess = guess
         self.guess_cl = guess_cl
         self.filtered_list = filtered_list
