@@ -1,3 +1,6 @@
+import re
+
+
 #consider making the wordle user class and make the wordle search functions a class method
 class WordleUser:
     def __init__(self, guess=None, guess_cl=None, filtered_list=None, word_list=None):
@@ -141,20 +144,44 @@ def wordle_filter(player: WordleUser ) -> list:
     player.filter_excluded_letter()
     player.filter_incorrect_positions()
 
-# ask for the user name and guess information
+# validate the user input
+def validate_input(user_input):
+    pattern = r'^[A-Za-z]+$'
+    if re.match(pattern, user_input):
+        return True
+    else:
+        return False
+
+# ask for guesses and correct letters    
 def ask_guess():
     player = WordleUser()
-    for i in range(5):
-        player.guess = input("\nInput your 5 letter guess:\n")
-        player.guess_cl = input("\nWhich letters are in the word but out of position?:\n").lower()
+    while True:
+        while True:
+            player.guess = input("\nInput your 5 letter guess:\n")
+            if player.guess == '!quit':
+                print("\n Exiting wordle_bot now...\n")
+                quit()
+                
+            elif validate_input(player.guess):
+                break
+            else:
+                print("Invalid input. Please only use upper and lowercase letters")
+        while True:
+            player.guess_cl = input("\nWhich letters are in the word but out of position?:\n").lower()
+            if player.guess_cl == '!quit':
+                print("\n Exiting wordle_bot now...\n")
+                quit()
+            elif validate_input(player.guess_cl):
+                break
+            else:
+                print("Invalid input. Please only use upper and lowercase letters\n")
             
         wordle_filter(player)
-        
         possible_guess_results(player.filtered_list)
     
 # how to play       
 def get_started():
-    print("\n   ###### Welcome to Wordle_Helper_Bot! ###### \n\nInput all incorretly positioned letters in lowercase \n   Input correctly positioned letters in UPPERCASE\n      Type 'quit' to exit")
+    print("\n   ###### Welcome to Wordle_Helper_Bot! ###### \n\nInput all incorretly positioned letters in lowercase \n   Input correctly positioned letters in UPPERCASE\n      Type '!quit' to exit")
     print("\n   ###### Welcome to Wordle_Helper_Bot! ######")
     ask_guess() 
  
