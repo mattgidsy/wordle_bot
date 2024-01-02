@@ -157,7 +157,7 @@ def ask_guess():
     player = WordleUser()
     while True:
         while True:
-            player.guess = input("\nInput your 5 letter guess:\n")
+            player.guess = input("\nInput your 5 letter guess:\n").strip()
             if player.guess == '!quit':
                 print("\n Exiting wordle_bot now...\n")
                 quit()
@@ -167,10 +167,12 @@ def ask_guess():
             else:
                 print("Invalid input. Please only use upper and lowercase letters")
         while True:
-            player.guess_cl = input("\nWhich letters are in the word but out of position?:\n").lower()
+            player.guess_cl = input("\nWhich letters are in the word but out of position?:\n").lower().strip()
             if player.guess_cl == '!quit':
                 print("\n Exiting wordle_bot now...\n")
                 quit()
+            elif player.guess_cl == "":
+                break
             elif validate_input(player.guess_cl):
                 break
             else:
