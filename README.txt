@@ -1,6 +1,18 @@
-this bot is made to help assist in solving wordle word puzzles.
-you will input your guesses and the bot will give you possible answers for you to choose for your next guess.
+Slowly but surely, I'm going to make this bot the correct way. This is my first real project so please bear with me. 
 
+This bot is made to help assist in solving wordle word puzzles.
+The user will input their guesses and the bot will give them possible answers for them to choose for their next guess.
+
+REQUIREMENTS:
+python
+discord
+dotenv
+
+DISCORD_API_TOKEN = 'YourSeCret12345kEy'
+
+should be locted in the .env file
+
+------------------------------------------------------
 Basic logic Outline 12/9
 
 1. Ask for the word guessed, ask user to capitalize words in the correct position
