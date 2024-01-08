@@ -49,12 +49,12 @@ def run():
             await ctx.send(user_input[i])
             i = i+1
     
+    #this command can run but it is not storing past guesses
     @bot.command()
     async def wordle(ctx, guess, guess_cl):
         player = WordleUser()
         player.guess = guess
         player.guess_cl = guess_cl
-        filter_list = []
         filter_list = wordle_filter(player)
         #filter_list = ['pong', 'dad', 'slate', 'rubber']
         await ctx.send(filter_list) 
