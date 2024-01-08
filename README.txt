@@ -4,9 +4,10 @@ This bot is made to help assist in solving wordle word puzzles.
 The user will input their guesses and the bot will give them possible answers for them to choose for their next guess.
 
 REQUIREMENTS:
+install a clean virtual environment
 python
-discord
-dotenv
+pip install discord
+pip install dotenv
 
 DISCORD_API_TOKEN = 'YourSeCret12345kEy'
 

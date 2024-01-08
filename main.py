@@ -4,7 +4,7 @@ from discord.ext import commands
 from wordlefilter import *
 
 def run():
-    intents = discord.Intents.default()
+    intents = discord.Intents.all()
     intents.message_content = True
     
     bot = commands.Bot(command_prefix= "!", intents=intents)
@@ -28,10 +28,13 @@ def run():
         
     @bot.command()
     async def say(ctx, *user_input): #this is giving me user_input as a tuple
+        
         if user_input == "":
             await ctx.send("you must enter a word for me to say because I can't send empty messages")
         else:
             await ctx.send(user_input)
+            await ctx. send(ctx.author.name)
+            
     
     @bot.command()
     async def say2(ctx, user_input = "user_input??", user_input2 = "Why"): # adding "user_input" and "why" as defaults if no parameter is passed by the user
@@ -53,11 +56,13 @@ def run():
     @bot.command()
     async def wordle(ctx, guess, guess_cl):
         player = WordleUser()
+        player.name = ctx.author.name
         player.guess = guess
         player.guess_cl = guess_cl
         filter_list = wordle_filter(player)
         #filter_list = ['pong', 'dad', 'slate', 'rubber']
         await ctx.send(filter_list) 
+        await ctx.send(player.name)
     
     
         
