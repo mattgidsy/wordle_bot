@@ -124,3 +124,5 @@ def wordle_filter(player: WordleUser ) -> list:
     player.filter_correct_letter()
     player.filter_excluded_letter()
     player.filter_incorrect_positions()
+    
+    return player.filtered_list
