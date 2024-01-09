@@ -68,7 +68,7 @@ def run():
     
     #this command can run but it is not storing past guesses
     @bot.command()
-    async def wordle(ctx, guess, guess_cl):
+    async def wordle(ctx, guess, guess_cl ):
         player = WordleUser()
         player.name = ctx.author.name
         player.guess = guess

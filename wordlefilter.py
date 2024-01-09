@@ -1,10 +1,10 @@
 class WordleUser:
-    def __init__(self,name=None,  guess=None, guess_cl=None, filtered_list=None, word_list=None):
+    def __init__(self, name=None,  guess=None, guess_cl=None, filtered_list=None, word_list=None):
         if filtered_list is None:
             filtered_list = []
         if word_list is None:
             try:
-                with open("wordle_list.txt") as wordle_list:
+                with open("wordle_bot\wordle_list.txt") as wordle_list:
                     lines = wordle_list.readlines()
                 word_list = [word.strip() for word in lines]
             except FileNotFoundError:
@@ -126,4 +126,4 @@ def wordle_filter(player: WordleUser ) -> list:
     player.filter_excluded_letter()
     player.filter_incorrect_positions()
     
-    return player.filtered_list
+    return player.filtered_list 
