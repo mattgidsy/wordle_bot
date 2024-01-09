@@ -3,7 +3,14 @@ import discord
 from discord.ext import commands
 from wordlefilter import *
 
+global counter
+counter = 0
+
 def run():
+    userdict ={}
+    counter = 0
+    
+    #create a dictionary to handle users and have a command counter
     intents = discord.Intents.all()
     intents.message_content = True
     
@@ -22,18 +29,25 @@ def run():
     brief = "this is brief"
     )
     
+    
+    
     async def ping(ctx):
         filter_list = ["pong", "dad", "slate", "rubber"]
         await ctx.send(filter_list)
-        
+         
     @bot.command()
+    
     async def say(ctx, *user_input): #this is giving me user_input as a tuple
-        
+        global counter
+        counter = counter +1
+        userdict[ctx.author.name] = counter
         if user_input == "":
             await ctx.send("you must enter a word for me to say because I can't send empty messages")
         else:
+
             await ctx.send(user_input)
-            await ctx. send(ctx.author.name)
+            await ctx.send(ctx.author.name)
+            await ctx.send(userdict)
             
     
     @bot.command()
