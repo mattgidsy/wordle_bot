@@ -3,12 +3,13 @@ import discord
 from discord.ext import commands
 from wordlefilter import *
 
-global counter
-counter = 0
+#global counter
+#counter = 0
 
 def run():
-    userdict ={}
-    counter = 0
+    player = WordleUser()
+    # userdict ={}
+    # counter = 0
     
     #create a dictionary to handle users and have a command counter
     intents = discord.Intents.all()
@@ -38,7 +39,7 @@ def run():
     @bot.command()
     
     async def say(ctx, *user_input): #this is giving me user_input as a tuple
-        global counter
+        #global counter
         counter = counter +1
         userdict[ctx.author.name] = counter
         if user_input == "":
@@ -68,20 +69,33 @@ def run():
     
     #this command can run but it is not storing past guesses
     @bot.command()
-    async def wordle(ctx, guess, guess_cl ):
-        player = WordleUser()
+    async def wordle(ctx, guess, guess_cl = ""):
+        # player = WordleUser()
         player.name = ctx.author.name
         player.guess = guess
         player.guess_cl = guess_cl
-        filter_list = wordle_filter(player)
-        #filter_list = ['pong', 'dad', 'slate', 'rubber']
-        await ctx.send(filter_list) 
+        wordle_filter(player)
+        #have to batch the lists into 200 word lists to stay under 2k character count on discord
+        for i in range(0, len(player.filtered_list), 200):
+                await ctx.send(player.filtered_list[i:i + 200])
+        #await ctx.send(player.filtered_list) 
         await ctx.send(player.name)
+    
+    @bot.command()
+    async def clear(ctx):
+        player.filtered_list = []
+        await ctx.send("Your wordle list has been cleared.")
     
     
         
     bot.run(settings.DISCORD_API_SECRET)
 if __name__ == "__main__":
     run()
+# player = WordleUser()
+# player.name = "matt."
+# player.guess = "guAva"
+# player.guess_cl = ""
+# wordle_filter(player)
+# print(player.filtered_list)
 
 #filter_list = ["pong", "dad", "slate", "rubber"]

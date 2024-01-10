@@ -40,7 +40,7 @@ class WordleUser:
                     temp_possible_words.append((word))
 
             # Update filtered_list with the filtered list
-            self.filtered_list = temp_possible_words
+            self.filtered_list = temp_possible_words 
         else:
             pass
         
@@ -72,7 +72,7 @@ class WordleUser:
 
     # filter words that don't include the correct letter in the correct position
     def filter_correct_position(self) -> list: 
-        
+         
         temp_possible_words = []
         #index the guessed word's letters for parsing
         guessed_positions = [(index, char.lower()) for index, char in enumerate(self.guess) if char.isupper()]
