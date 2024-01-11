@@ -44,6 +44,7 @@ class WordleUser:
         else:
             pass
         
+        #print(f"filter incorrect positions filter list len:{len(self.filtered_list)}")
         return self.filtered_list
 
     # filter the words that have letters that should be totally excluded from the word (letters neither correct nor in posistion)
@@ -68,11 +69,12 @@ class WordleUser:
                 temp_possible_words.append(word)
         self.filtered_list = temp_possible_words
         
+        #print(f"filter excluded letter filter list len: {len(self.filtered_list)}")
         return self.filtered_list
 
-    # filter words that don't include the correct letter in the correct position
+
     def filter_correct_position(self) -> list: 
-         
+        #print(f"correct positions word list len: {len(self.word_list)}") 
         temp_possible_words = []
         #index the guessed word's letters for parsing
         guessed_positions = [(index, char.lower()) for index, char in enumerate(self.guess) if char.isupper()]
@@ -83,31 +85,41 @@ class WordleUser:
             for word in self.word_list:
                 # Check if all guessed letters are in the correct positions
                 if all((i,c) in guessed_positions and c == word[i] for i,c in guessed_positions):
-                    self.filtered_list.append(word)
+                    temp_possible_words.append(word)
+                else:
+                    pass
+            self.filtered_list = temp_possible_words
         elif any(letter.isupper() for letter in self.guess) and len(self.filtered_list) > 0:
             #if word not in filtered_list append to a temp list and replace filtered list to deduce
             for word in self.filtered_list:
                 if all((i,c) in guessed_positions and c == word[i] for i,c in guessed_positions):
                     temp_possible_words.append(word)
+                else:
+                    pass
             self.filtered_list = temp_possible_words
         else: 
             pass
         
+        #print(f"filter correct positon filter list len: {len(self.filtered_list)}")
         return self.filtered_list
 
     #filter words that include the correct letters        
     def filter_correct_letter(self) -> list:
-        
+        #print(f"correct letter word list len: {len(self.word_list)}")
         temp_possible_words = []    
         correct_letters = list(self.guess_cl)
-
-        if len(self.filtered_list) == 0:
+        
+        #pass if guess_cl is empty
+        if self.guess_cl == "":
+            pass
+            
+        elif len(self.filtered_list) == 0:
             for word in self.word_list:
-                # Check if at least one of the specified letters is present in the word
-                if all(char in word for char in correct_letters):
-                    if word not in self.filtered_list:
+                if all(char in word for char in correct_letters) and word not in temp_possible_words:
                     # If true, append the word to the filtered list if it's not there
-                        self.filtered_list.append(word)
+                    temp_possible_words.append(word)
+                self.filtered_list = temp_possible_words
+            
                         
         else:
             for word in self.filtered_list:
@@ -117,12 +129,13 @@ class WordleUser:
                     temp_possible_words.append(word)
             self.filtered_list = temp_possible_words
             
+        #print(f"filter correct letter filter list len: {len(self.filtered_list)}")
         return self.filtered_list
         
 def wordle_filter(player: WordleUser ) -> list:
     
-    player.filter_correct_position()
     player.filter_correct_letter()
+    player.filter_correct_position()
     player.filter_excluded_letter()
     player.filter_incorrect_positions()
     
