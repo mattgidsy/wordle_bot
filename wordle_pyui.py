@@ -1,6 +1,8 @@
 from wordlefilter import *
 import re
-#display the results                                        
+#display the results
+
+                                
 def possible_guess_results(filtered_list: list):
     if len(filtered_list) == 0:
         try_again = input("\nHow do I say this? \n\nI have failed you.. or you have failed me.\n\nI have no possible answers that meet your conditions.\n\n Try again? [Y/N]: ")
@@ -24,8 +26,13 @@ def validate_input(user_input):
         return False
 
 # ask for guesses and correct letters    
-def ask_guess():
-    player = WordleUser()
+def ask_guess(user_dict):
+    username = input("Enter your username:\n")
+    if username not in user_dict:
+        user_dict[username] = create_new_user(username)
+        
+    player = user_dict[username]
+
     while True:
         while True:
             player.guess = input("\nInput your 5 letter guess:\n").strip()
@@ -51,11 +58,14 @@ def ask_guess():
             
         wordle_filter(player)
         possible_guess_results(player.filtered_list)
+        print(user_dict)
     
 # how to play       
 def get_started():
-    print("\n   ###### Welcome to Wordle_Helper_Bot! ###### \n\nInput all incorretly positioned letters in lowercase \n   Input correctly positioned letters in UPPERCASE\n      Type '!quit' to exit")
-    print("\n   ###### Welcome to Wordle_Helper_Bot! ######")
-    ask_guess() 
- 
+    print("\n   ###### Welcome to Wordle_Helper_Bot! ######\n")
+    print("Input all incorrectly positioned letters in lowercase\nInput correctly positioned letters in UPPERCASE\nType '!quit' to exit")
+    user_dict = {}
+    ask_guess(user_dict)
+    
+
 get_started()

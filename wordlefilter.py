@@ -140,3 +140,7 @@ def wordle_filter(player: WordleUser ) -> list:
     player.filter_incorrect_positions()
     
     return player.filtered_list 
+
+def create_new_user(user_name):
+    return WordleUser(name=user_name)
+ 

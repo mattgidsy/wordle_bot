@@ -9,7 +9,7 @@ from validator import *
 
 def run():
     player = WordleUser()
-    # userdict ={}
+    user_dict ={}
     # counter = 0
     
     #create a dictionary to handle users and have a command counter
@@ -73,16 +73,22 @@ def run():
         await ctx.send(f"I'm sorry, ~~Dave~~...{ctx.author.name}")
     
     #this command can run but it is not storing past guesses
-    @bot.command()
+    @bot.command(user_dict)
     async def wordle(ctx, guess, guess_cl = ""):
         
-        player.name = ctx.author.name
+        user_name = ctx.author.name
+        #username = input("Enter your username:\n")
+        if user_name not in user_dict:
+            user_dict[user_name] = create_new_user(user_name)
+        
+        player = user_dict[user_name]
+        
         
         if guess == validate_guess(guess):
-            print("guess validated")
+            #print("guess validated")
             player.guess = guess
             if guess_cl == "":
-                print("guess_cl validated")
+                #print("guess_cl validated")
                 player.guess_cl = guess_cl
                 wordle_filter(player)
                 if len(player.filtered_list) == 0:
@@ -112,16 +118,63 @@ def run():
         #await ctx.send(player.filtered_list) 
         #await ctx.send(player.name)
     
-    @bot.command()
+    @bot.command(user_dict)
     async def clear(ctx):
-        if player.name == ctx.author.name:
+        user_name = ctx.author.name
+        if user_name in user_dict:
+            player = user_dict[user_name]
             player.filtered_list = []
-            await ctx.send(f"{player.name}, your wordle list has been cleared.")
+            await ctx.send(f"{user_name}, your wordle list has been cleared.")
         else:
-            await ctx.send(f"{ctx.author.name}, I don't seem to have a list for you, fam.")
-    
-    
+            await ctx.send(f"{user_name}, I don't seem to have a list for you, fam.")
+            
+#  #testing wordle command for multiuser
+#     @bot.command(user_dict)
+#     async def tword(ctx, guess, guess_cl = ""):
+#         user_name = "Test_User"
+#         #username = input("Enter your username:\n")
+#         if user_name not in user_dict:
+#             user_dict[user_name] = create_new_user(user_name)
         
+#         player = user_dict[user_name]
+#         if guess == validate_guess(guess):
+#             #print("guess validated")
+#             player.guess = guess
+#             if guess_cl == "":
+#                 #print("guess_cl validated")
+#                 player.guess_cl = guess_cl
+#                 wordle_filter(player)
+#                 if len(player.filtered_list) == 0:
+#                     await ctx.send(f"Dear, {player.name}, I'm sorry that I (or you) are at fault here. Your list of possible answers looks empty. Much like my care cup.")
+#                 else:
+#                     for i in range(0, len(player.filtered_list), 200):
+#                             await ctx.send(f"{player.name}'s list of possible wordle words:")
+#                             await ctx.send(player.filtered_list[i:i + 200])                
+#             elif guess_cl == validate_guess_cl(guess_cl):
+#                     player.guess_cl = guess_cl
+#                     wordle_filter(player)
+#                     if len(player.filtered_list) == 0:
+#                         await ctx.send(f"Dear, {player.name}, I'm sorry that I (or you) are at fault here. Your list of possible answers looks empty. Much like my care cup.")
+#                     else:
+#                         for i in range(0, len(player.filtered_list), 200):
+#                                 await ctx.send(f"{player.name}'s list of possible wordle words:")
+#                                 await ctx.send(player.filtered_list[i:i + 200])                    
+#             else:
+#                 await ctx.send(f"{player.name}, there was a problem with your second input. Please remember that I am dumb and can only accept 5 letter words with no special characters (except for an empty field here).")     
+#         else:
+#             await ctx.send(f"{player.name}, there was a problem with your guess's first input. Please remember that I am dumb and can only accept 5 letter words with no special characters.")
+#             await ctx.send("type !wordle to try again. \nHere's an example: \n!wordle SlAte e")
+# #testing clear for multiuser            
+    # @bot.command(user_dict)
+    # async def tclear(ctx):
+    #     user_name = "Test_User"
+    #     if user_name in user_dict:
+    #         player = user_dict[user_name]
+    #         player.filtered_list = []
+    #         await ctx.send(f"{user_name}, your wordle list has been cleared.")
+    #     else:
+    #         await ctx.send(f"{user_name}, I don't seem to have a list for you, fam.")
+                    
     bot.run(settings.DISCORD_API_SECRET)
 if __name__ == "__main__":
     run()
