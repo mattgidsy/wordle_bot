@@ -55,6 +55,10 @@ class WordleUser:
         excluded_letters = [letter for letter in self.guess if letter.islower() and letter not in self.guess_cl]
         # create a list of tuples containing the correct letters and their indexed positions   
         correct_positions = [(index, char.lower()) for index, char in enumerate(self.guess) if char.isupper() and char not in self.guess_cl]
+        
+        #if the filtered list is empty make the filtered list the word list
+        if len(self.filtered_list) == 0:
+            self.filtered_list = self.word_list
             
         #filter through possible words ignoring letters in the correct positions. allows for repeat letters
         for word in self.filtered_list:

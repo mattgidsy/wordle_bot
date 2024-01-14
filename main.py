@@ -25,7 +25,6 @@ def run():
     async def rude(ctx):
         await ctx.send(f"I'm sorry, ~~Dave~~...{ctx.author.name}")
 
- 
     #enter !wordle guess guess_correct_letters example: !wordle slAtE s
     @bot.command(
         user_dict,
