@@ -16,7 +16,32 @@ class WordleUser:
         self.guess_cl = guess_cl
         self.filtered_list = filtered_list
         self.word_list = word_list
-        
+    
+    #filter any words that do not contain all of the correct letters (this catches repeat letters)    
+    def filter_all_correct(self) -> list:
+        # Dictionary to store the required letters and their counts
+        required_letters = {}
+
+        # Process letters from self.guess (uppercase only)
+        for letter in self.guess:
+            if letter.isupper():
+                lower_letter = letter.lower()
+                required_letters[lower_letter] = required_letters.get(lower_letter, 0) + 1
+
+        # Process letters from self.guess_cl (all letters)
+        for letter in self.guess_cl:
+            lower_letter = letter.lower()
+            required_letters[lower_letter] = required_letters.get(lower_letter, 0) + 1
+
+        # Filter words based on required letters and counts
+        temp_possible_words = []
+        for word in self.filtered_list:
+            if all(word.count(letter) >= count for letter, count in required_letters.items()):
+                temp_possible_words.append(word)
+                
+        self.filtered_list = temp_possible_words
+        return self.filtered_list
+
     #filter words with letters that were correct but out of position, filter words with the correct letter's incorrrect position
     def filter_incorrect_positions(self) -> list:
         
@@ -142,6 +167,7 @@ def wordle_filter(player: WordleUser ) -> list:
     player.filter_correct_position()
     player.filter_excluded_letter()
     player.filter_incorrect_positions()
+    player.filter_all_correct()
     
     return player.filtered_list 
 
