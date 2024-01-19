@@ -1,5 +1,5 @@
 class WordleUser:
-    def __init__(self, name=None,  guess=None, guess_cl=None, filtered_list=None, word_list=None):
+    def __init__(self, user_id=None, name=None,  guess=None, guess_cl=None, filtered_list=None, word_list=None):
         if filtered_list is None:
             filtered_list = []
         if word_list is None:
@@ -11,6 +11,7 @@ class WordleUser:
                 print("\n'wordle_list.txt' could not be found")
                 print("\nExiting the program...\n")
                 quit()
+        self.user_id = user_id
         self.name = name
         self.guess = guess
         self.guess_cl = guess_cl
@@ -69,7 +70,6 @@ class WordleUser:
         else:
             pass
         
-        #print(f"filter incorrect positions filter list len:{len(self.filtered_list)}")
         return self.filtered_list
 
     # filter the words that have letters that should be totally excluded from the word (letters neither correct nor in posistion)
@@ -98,12 +98,10 @@ class WordleUser:
                 temp_possible_words.append(word)
         self.filtered_list = temp_possible_words
         
-        #print(f"filter excluded letter filter list len: {len(self.filtered_list)}")
         return self.filtered_list
 
-
+    #filter words that have the correct letters in the correct postion
     def filter_correct_position(self) -> list: 
-        #print(f"correct positions word list len: {len(self.word_list)}") 
         temp_possible_words = []
         #index the guessed word's letters for parsing
         guessed_positions = [(index, char.lower()) for index, char in enumerate(self.guess) if char.isupper()]
@@ -129,12 +127,10 @@ class WordleUser:
         else: 
             pass
         
-        #print(f"filter correct positon filter list len: {len(self.filtered_list)}")
         return self.filtered_list
 
     #filter words that include the correct letters        
     def filter_correct_letter(self) -> list:
-        #print(f"correct letter word list len: {len(self.word_list)}")
         temp_possible_words = []    
         correct_letters = list(self.guess_cl)
         
@@ -158,7 +154,6 @@ class WordleUser:
                     temp_possible_words.append(word)
             self.filtered_list = temp_possible_words
             
-        #print(f"filter correct letter filter list len: {len(self.filtered_list)}")
         return self.filtered_list
         
 def wordle_filter(player: WordleUser ) -> list:
@@ -171,6 +166,6 @@ def wordle_filter(player: WordleUser ) -> list:
     
     return player.filtered_list 
 
-def create_new_user(user_name):
-    return WordleUser(name=user_name)
- 
+def create_new_user(user_id):
+    return WordleUser(user_id=user_id)
+  

@@ -1,8 +1,7 @@
 from wordlefilter import *
 import re
-#display the results
 
-                                
+#display the results                             
 def possible_guess_results(filtered_list: list):
     if len(filtered_list) == 0:
         try_again = input("\nHow do I say this? \n\nI have failed you.. or you have failed me.\n\nI have no possible answers that meet your conditions.\n\n Try again? [Y/N]: ")
@@ -58,7 +57,6 @@ def ask_guess(user_dict):
             
         wordle_filter(player)
         possible_guess_results(player.filtered_list)
-        print(user_dict)
     
 # how to play       
 def get_started():
