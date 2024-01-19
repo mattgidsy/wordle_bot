@@ -61,20 +61,22 @@ def run():
                 wordle_filter(player)
                 if len(player.filtered_list) == 0:
                     await ctx.send(f"Dear, {player.name}, I'm sorry that I (or you) are at fault here. Your list of possible answers looks empty. Much like my care cup.", ephemeral=True)               
+                elif len(player.filtered_list) >= 1000:
+                    await ctx.send(f"I'm sorry {player.name}, you are not a good guesser. There are over 1000 words for you to choose from and I'll get rate limited if I send them all to you now. How about you take another guess. Maybe a better guess. like slate or trope. once you get your list below 1000, I'll send you the word list.", ephemeral=True)
                 else:
                     #batch the lists into 200 word lists to stay under 2k character count on discord
                     for i in range(0, len(player.filtered_list), 200):
-                            await ctx.send(f"{player.name}'s list of possible wordle words:", ephemeral=True)
-                            await ctx.send(f"{player.filtered_list[i:i + 200]}", ephemeral=True)                                     
+                            await ctx.send(f"{player.name}'s list of possible wordle words:\n{player.filtered_list[i:i + 200]}", ephemeral=True)                                     
             elif guess_cl == validate_guess_cl(guess_cl):
                     player.guess_cl = guess_cl
                     wordle_filter(player)
                     if len(player.filtered_list) == 0:
                         await ctx.send(f"Dear, {player.name}, I'm sorry that I (or you) are at fault here. Your list of possible answers looks empty. Much like my care cup.", ephemeral=True)
+                    elif len(player.filtered_list) >= 1000:
+                        await ctx.send(f"I'm sorry {player.name}, you are not a good guesser. There are over 1000 words for you to choose from and I'll get rate limited if I send them all to you now. How about you take another guess. Maybe a better guess. like slate or trope. once you get your list below 1000, I'll send you the word list.", ephemeral=True)
                     else:
                         for i in range(0, len(player.filtered_list), 200):
-                                await ctx.send(f"{player.name}'s list of possible wordle words:", ephemeral=True)
-                                await ctx.send(f"{player.filtered_list[i:i + 200]}", ephemeral=True)                    
+                                await ctx.send(f"{player.name}'s list of possible wordle words:\n{player.filtered_list[i:i + 200]}", ephemeral=True)                    
             else:
                 await ctx.send(f"{player.name}, there was a problem with your second input. Please remember that I am dumb and can only accept 5 letter words with no special characters (except for an empty field here).", ephemeral=True)     
         else:
