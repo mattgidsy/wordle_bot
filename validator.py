@@ -20,5 +20,5 @@ def test():
     print(validate_guess(guess))
     print(validate_guess_cl(guess_cl))
     
-# I need to find a way to handle words that are not in the database that would only come up when sending 5 letters all capitalized.    
+    
 #test()
