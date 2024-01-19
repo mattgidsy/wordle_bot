@@ -28,7 +28,7 @@ def run():
     #when the bot is being rude    
     @bot.hybrid_command(
         help = "when the bot is being rude.",
-        descrption = "when the bot is being rude."
+        description = "when the bot is being rude."
     )
     async def rude(ctx):
         await ctx.send(f"I'm sorry, ~~Dave~~...{ctx.author.name}") 
