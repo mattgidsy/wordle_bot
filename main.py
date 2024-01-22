@@ -23,6 +23,7 @@ def run():
         print(f"Bot Id: {bot.user.id}")
         print(f"Bot Guild ID:{bot.guilds[0].id}")
         print("____________________")
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name='/wordle'))
 
     
     #when the bot is being rude    
@@ -30,7 +31,7 @@ def run():
         help = "when the bot is being rude.",
         description = "when the bot is being rude."
     )
-    async def rude(ctx):
+    async def rude(ctx): 
         await ctx.send(f"I'm sorry, ~~Dave~~...{ctx.author.name}") 
                  
     #enter !wordle guess guess_correct_letters example: !wordle slAtE s
