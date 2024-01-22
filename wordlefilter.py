@@ -4,7 +4,7 @@ class WordleUser:
             filtered_list = []
         if word_list is None:
             try:
-                with open("wordle_bot\wordle_list.txt") as wordle_list:
+                with open("wordle_list.txt") as wordle_list:
                     lines = wordle_list.readlines()
                 word_list = [word.strip() for word in lines]
             except FileNotFoundError:
